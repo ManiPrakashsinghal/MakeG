@@ -1,0 +1,411 @@
+
+html {
+  scroll-behavior: smooth;
+}
+
+.main {padding: 2px;margin: 0;}
+.sag_grid {/* border: 1px solid #c3c3c3; *//* overflow: hidden; */position: relative;display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-orient: vertical;-webkit-box-direction: normal;-ms-flex-direction: column;flex-direction: column;-webkit-box-sizing: border-box;box-sizing: border-box;}
+.drag-div {padding: 5px 10px; background-color: #dadada; opacity: 0.7;border: 1px solid #BDC3C7; border-bottom: 0;height: 30px;}
+.parent_main {/* clear: both; *//* display: flex; *//* flex-wrap: wrap; *//* flex-direction: column; *//* width: 100%; *//* overflow-x: auto; *//* overflow-y: hidden; */}
+.header_div {/* background-color: #efefef;height: 100px; display: flex; *//* flex-direction: row; */width: inherit;}
+.child_header {position: relative;left: 0;/* flex-grow: 1; */height: 33px;/* border-top: 1px solid #c3c3c3; */}
+.header_row {/*position: absolute;width: 2670px;*/display: -webkit-flex; display: -ms-flexbox; display: -moz-flex;  display: flex; height: 100%;align-items: center;/* border-top: 1px solid #c3c3c3;background-color: #efefef; */}
+.header_cell {position: absolute;display: inline-block;flex-grow: 1;padding: 0 5px; height: 33px; display: -webkit-flex; display: -ms-flexbox; display: -moz-flex;  display: flex; align-items: center;border-left: 1px solid #bfbfbf; background: #efefef; border-top: 1px solid #c3c3c3;}
+.header_cell input[type="text"] {width: 100%;}
+.sag_grid_table_main {/* display: flex; *//* width: 2670px; *//* overflow-y: auto; *//* overflow-x: hidden; *//* height: 552px; *//* position: relative; *//* height: 100%; *//* min-width: 0px; *//* overflow: hidden; *//* -webkit-box-flex: 1; */-ms-flex: 1 1 auto;/* flex: 1 1 auto; *//* width: 100%; *//* overflow-x: auto; *//* height: calc(100% + 0px); */ width: inherit;}
+.first_grid_tbody {/* flex: 1; *//* overflow: hidden; *//* flex-direction: row; *//* height: 100%; *//* display: flex; *//* overflow-x: hidden; *//* overflow-y: auto; *//* width: 2670px; */}
+.table_body {display: block; position: relative;}
+.grid_row {/*position: absolute;width: 2670px;*/display: -webkit-flex; display: -ms-flexbox; display: -moz-flex;  display: flex; height: 100%;align-items: center;border-top: 1px solid #c3c3c3;}
+.grid_cell {position: absolute;display: inline-block;flex-grow: 1;padding: 0 5px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; border-left: 1px solid #bfbfbf; background: #fff; border-top: 1px solid #c3c3c3;}
+.grid_row_header {position: absolute;left: 0;height: 20px;/* border-top: 1px solid #c3c3c3; */     width: 100%;}
+.gridScroll {height: 530px; width: 16px;overflow-y: scroll;overflow-x: hidden; position: absolute; right:21px;top: 150px;}
+.secondScroll {height: 1000px;}	
+.table_main{ display: -webkit-flex; display: -ms-flexbox; display: -moz-flex;  display: flex; -webkit-flex-direction: column; -ms-flex-direction: column; -moz-flex-direction: column; flex-direction: column; font-size: 12px; height: 100%;-moz-flex: 1; -ms-flex: 1;-webkit-flex: 1; flex : 1;overflow: hidden;overflow: hidden;}
+.table_main .left-tbl{/* display: flex; width: 280px;max-width: 280px;min-width: 280px;*/position: relative;}
+.table_main .center-tbl{/* display: flex; *//* width: 100vw; *//* flex: 1; */-moz-flex: 1; -ms-flex: 1; -webkit-flex: 1; flex : 1;; }
+.table_main .right-tbl{/* display: flex; *//* width: auto; width: 280px;max-width: 280px;min-width: 280px;*/position: relative;}
+.table_main .left-tbl .header_row,
+.table_main .left-tbl .sag_grid_table_main{/* width:250px; */}
+.table_main .center-tbl .header_row{}
+.table_main .right-tbl .header_row,
+.table_main .right-tbl .sag_grid_table_main{}
+
+
+.header_Blk {
+    display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+     flex-direction: row;
+    width: 100%;
+    white-space: nowrap;
+    padding-right: 17px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #c3c3c3;
+}
+
+.left-tbl-header {
+    /* width: 280px;
+    max-width: 280px;
+    min-width: 280px; */
+    display: inline-block;
+    overflow: hidden;
+}
+
+.center-tbl-header {
+  /*   position: relative;
+    height: 100%;
+    min-width: 0px;
+    overflow: hidden;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto; */
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+     flex : 1;
+    /*  width: calc(100% - 420px);  */
+     overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+
+.right-tbl-header {
+    /* width: 280px;
+    max-width: 280px;
+    min-width: 280px; */
+    display: inline-block;
+    overflow: hidden;
+}
+
+
+
+.table_main .left-tbl {
+    float: left;
+    height: 3300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+
+.table_main .center-tbl {
+    float: left;
+    height: 3300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.table_main .right-tbl {
+    float: right;
+    height: 3300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+.mainDivTbody {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+     flex : 1;
+}
+
+.mainDivTbodySecond {
+    display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+     flex-direction: row;
+    width: 100%;
+    white-space: nowrap;
+
+}
+
+
+/* div#centerGrid {
+    width:calc(100% - 420px)
+} */
+
+.fa{ font-size:14px}
+
+
+:root {
+	--clrInHover: #ccc;
+}
+
+/* 
+div.grid_row:hover{
+    background-color: var(--clrInHover);
+} */
+
+div.sagRow:active > div{
+    background-color: #9999;
+}
+
+.ui-state-active { 
+    background-color: #968383b0; 
+}
+
+
+.table_main .left-tbl .sag_grid_table_main, .table_main .right-tbl .sag_grid_table_main {overflow: hidden;}
+
+.gridLeftScroll {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    height: 17px;
+}
+.secondLeftScroll {
+    display: block;
+    height: 17px;
+}
+
+
+.gridCenterScroll {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    height: 17px;
+     -moz-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+     flex : 1;
+}
+
+.secondCenterScroll {
+    display: block;
+    height: 17px;
+}
+
+.gridRightScroll {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    height: 17px;
+}
+
+.secondRightScroll {
+    display: block;
+    height: 17px;
+}
+
+
+
+/****filter****/
+
+.tabLList {
+    border: 1px solid #c9c8c7;
+    margin-bottom: 5px;
+    height: 12vh;
+    overflow: auto;
+}
+.filterRow {
+     display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+     flex-direction: row;
+    border-bottom: 1px solid #c9c8c7;
+}
+
+.filterRow .checkbox {
+    width: 40px;
+    text-align: center;
+}
+.dropdoenMenu {
+    width: 18vw;
+    box-shadow: 0px 2px 8px 2px #6f6f6f;
+    position: fixed !important;
+}
+.filterRow .checkbox input.filterRowInput {
+    opacity: 1; 
+    margin:3px 0;
+    position: inherit;
+}
+.filterRow .checkLabel {
+    font-size: 0.85vw;
+    width: calc(100% - 40px);
+}
+.blockDiv .form-check-label {
+    padding: 0;
+    font-size: 0.95vw;
+}
+
+
+/****filter****/
+
+.masterdiv {
+    overflow: hidden  !important;
+}
+
+.totalFooter, .scrollBar{
+     display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+     flex-direction: row;
+    width: 100%;
+    white-space: nowrap;
+
+}
+
+.leftTotalFooter {
+    position: relative;
+    height: 25px;
+}
+
+.totalField {
+    display: inline-block;
+    -webkit-flex-grow: 1;
+     -ms-flex-grow: 1;
+     -moz-flex-grow: 1;
+    flex-grow: 1;
+    padding: 0 5px;
+    position: absolute;
+    height: 25px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: flex; 
+    align-items: center;
+    border-left: 1px solid #afafaf;
+    border-bottom: 1px solid #afafaf;
+    background-color: #f1f1f1;
+}
+
+.totalField input {
+    width: 100%;
+}
+
+.paginationBlk .btn-group .btn {
+    border: 1px solid;
+    height: auto;
+}
+.footerGrid {
+    background: #eaeaea!important;
+    border-top: 1px solid #b7b7b7;
+    padding-right: 17px;
+    background-color: #f1f1f1;
+}
+
+.totalFooter .child_header {
+    height: 25px;
+}
+.totalFooter .child_header .header_row {
+    border-top: none;
+}
+
+.footer_cell{ display: -webkit-flex;  display: -ms-flexbox;  display: -moz-flex;  display: flex;  align-items: center;}
+.sagGridFilter {
+    position: absolute;
+    right: 5px;
+        padding: 4px 7px;
+    border: 1px solid transparent;
+}
+
+.header_Blk .child_header:first-child {
+    border: none;
+}
+/*  .sag_grid{height: 70vh;}
+ */
+.sagGridResize {
+    position: absolute;
+    right: -3px;
+    z-index: 1;
+    cursor: col-resize;
+}
+
+.totalFooter{
+    display: none;
+}
+
+.masterdiv{ 
+	 display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+     flex-direction: column;}
+
+.masterdiv .col-sm-12, .masterdiv .main, .sag_grid, .gridTheme, .gridPopupTheme{
+     display: -webkit-flex;
+     display: -ms-flexbox;
+     display: -moz-flex;
+     display: flex; 
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+     flex-direction: column;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+     flex : 1;
+     overflow: hidden;
+     height: 100%;
+}
+
+.header_cell .filterActive {
+    position: absolute ;
+    right: 1px ;
+    background-color: #fff ;
+    height: 100% ;
+    width: 40px ;
+    padding: 8px ;
+    border-left: 1px solid #ccc;
+}
+
+.dropdoenMenu {
+    border-top: none !important;
+    padding: 5px !important;
+}
+
+.dropdoenMenu {
+    box-shadow: none;
+}
+
+.blockDiv input[type=checkbox] {
+    position: inherit;
+    margin: 7px;
+    padding: 0;
+}
+
+.mr-1 {
+    margin-right: 0.25rem;
+}
+
+
+
+/**  
+Manage css by lavesh kaplana
+**/
+
+
+.center-tbl-header .header_row .header_cell:last-child {
+    border-right: 1px solid #bfbfbf;
+}
+
+.grid_row .grid_cell select, .grid_row .grid_cell input {
+    border: none;
+}
+
+
+
+.sml_header_text{white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis; padding-right:20px}
+.masterdiv .form-control{padding:5px 10px; height:30px}
+.masterdiv .tabLList{ min-height:120px}
+.sml_active{    background: #fff;    border: #cecece 1px solid;}
+.header_row .header_cell:last-child .sagGridResize{right: -1px;}

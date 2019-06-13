@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://saggst.com/assets/ui/css/lib/font-awesome/font-awesome.min.css" />
+  <script src="staticData.js"></script>
+  <script src="sagGridPlugin.js"></script>
+
+  <style>
+
+.mainDivTbody {
+    height: 600px !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    /* -webkit-flex: 1; */
+    /* flex: 1; */
+}
+
+</style>
+  
+</head>
+<body>
+
+   <div class="masterdiv">
+
+	<div id="GridSourceDiv"> 
+	</div>
+
+   </div>
+<script>
+
+function stopLoader(){
+
+}
+
+
+var rowsDataAPI= API_Data.data;
+
+addGrid(rowsDataAPI);
+
+
+function addGrid(rowsData){
+		
+
+		var sourceDiv = document.getElementById("GridSourceDiv");
+		var columns = [
+				            /* {
+				
+				     	   header :"<input type=\"checkbox\" />",
+				     	   field :"checkbox",
+				     	   "editable": false,
+				     	   width : "50px",
+				     	   "elementType":[],
+				     	   "text-align" : "center",
+				     	   "attributes":{
+									"ng-dblclick":"modify()"
+					            	}	
+				        },*/
+				
+						{   
+							"colType":"checkBox",
+							 width : "50px",
+							 field:"checkBox",
+							 "text-align" : "center",
+							 "attributes":{
+								 //"ng-click" : "selectRow()",
+									"ng-dblclick":"modify()"
+					          }	
+						},
+				        {
+				     	   header :"S.No.",
+				     	   field :"sno",
+				     	   "editable": false,
+				     	   search : false,
+				     	   width : "50px",
+				     	   "text-align":"center",
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Group Name",
+				     	   field :"groupName",
+				     	   "editable": false,
+				     	   search : true,
+				     	   width:"140px",
+				     	   "text-align":"center",
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Client Code",
+				     	   field :"clientCode",
+				     	   "editable": false,
+				     	   search : true,
+				     	   width:"130px",
+				     	   "text-align":"center",
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				
+				        {
+				     	   header :"Name of Organisation",
+				     	   field :"othindName",
+				     	   filter : true,
+				     	   width : "300px",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Constitution",
+				     	   field :"statusname",
+				     	   "text-align":"left",
+				     	   filter :true,
+				     	   width : "170px",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	  // "ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				
+				        {
+				     	   header :"PAN",
+				     	   field :"pan",
+				     	   filter :true,
+				     	   "text-align":"center",
+				     	   width : "140px",
+				     	   "editable": true,
+				     	   search :true,
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	  // "ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				
+				        {
+				     	   header :"GSTN",
+				     	   field :"gstnNo",
+				     	   filter : true,
+				     	   width : "180px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Date of Registration",
+				     	   field :"gstRgdt",
+				     	   filter : true,
+				     	   width : "150px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Status",
+				     	   field :"gstnStatus",
+				     	   filter : true,
+				     	   width : "170px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Dealer Type",
+				     	   field :"gstnDty",
+				     	   filter : true,
+				     	   width : "120px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Composition",
+				     	   field :"gstnCmpyn",
+				     	   filter : true,
+				     	   width : "160px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"State Name",
+				     	   field :"stateName",
+				     	   filter : true,
+				     	   width : "150px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Mobile Number",
+				     	   field :"mobileNo",
+				     	   filter : true,
+				     	   width : "120px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	  // "ng-click" : "selectRow()",
+				     	  // "ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Email",
+				     	   field :"mailEmail",
+				     	   filter : true,
+				     	   width : "220px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				
+				        {
+				     	   header :"Address",
+				     	   field :"consAdr",
+				     	   filter : true,
+				     	   width : "500px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Username",
+				     	   field :"gstnUsrcode",
+				     	   filter : true,
+				     	   width : "200px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        },
+				        {
+				     	   header :"Password",
+				     	   field :"gstnPassword",
+				     	   filter : true,
+				     	   width : "200px",
+				     	   "text-align":"center",
+				     	   "editable": false,
+				     	   search :true,
+				     	   "attributes":{
+				     	   //"ng-click" : "selectRow()",
+				     	   //"ng-dblclick" : "modifyBySelectRow()"
+				     	   }
+				        }
+				
+				
+				        ];
+
+		var rowsDataCopy = rowsData;
+		for(var i=0;i<rowsDataCopy.length;i++){
+			rowsDataCopy[i]["sno"] = i+1;
+			rowsDataCopy[i]["checkbox"]="<input type=\"checkbox\" ng-click=\"selectRow()\" class=\"errorClass\">";
+
+			if(rowsDataCopy[i]["gstnStatus"] == "N"){
+				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
+			}
+			else if (rowsDataCopy[i]["gstnStatus"] == "I"){
+				rowsDataCopy[i]["gstnStatus"]="INVALID";
+			}else if(rowsDataCopy[i]["gstnStatus"] == "V"){
+				if(rowsDataCopy[i]['gstnActive']!=null && rowsDataCopy[i]['gstnActive']=='A'){
+					rowsDataCopy[i]["gstnStatus"]="VALID(Active)";
+				}else if(rowsDataCopy[i]['gstnActive']!=null && rowsDataCopy[i]['gstnActive']=='N'){
+					rowsDataCopy[i]["gstnStatus"]="VALID(Active Pending Verification)";
+				}else{
+					rowsDataCopy[i]["gstnStatus"]="VALID";
+				}
+			}else if(rowsDataCopy[i]["gstnStatus"] == "Not Varified Gstin"){
+				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
+			}
+			else if (rowsDataCopy[i]["gstnStatus"] == "Invalid Gstin"){
+				rowsDataCopy[i]["gstnStatus"]="INVALID";
+			}else{
+				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
+			}
+		}
+
+		var callBackMethode = {
+				"onRowClick":function(){},
+				"onRowDbleClick":function(){  }
+		};
+		
+		
+		if( undefined != sourceDiv){
+			var gridData = { 
+					columnDef     : columns,
+					rowDef        : rowsDataCopy,
+					menu          : {fontFamily:true,fontSize:true,underline:true,left:true,center:true,right:true,selectionType:true,columnDraggable:true,columnResizable : true},
+					selection     : "row",
+					//pagging       : true,
+					//paggingType   : "Record Wise",
+					clientSidePagging : true,
+					//recordPerPage : $rootScope.gridPCount,
+					recordNo      : true,
+					gridExportService	:	 null,//gridExportService,
+					frezzManager		:	{"checkBox":"left","sno":"left","othindName":"left","groupName":"left","clientCode":"left"},
+					sheatDetails :{sheatName:"Client_ClientCreation_Client_List",title:"Client Creation Client List",fileName : "Client_ClientCreation_Client_List"},
+					callBack:callBackMethode
+			};
+			var gridDynamic = SagGridMP(sourceDiv,gridData, null, null);
+			
+/**
+			$( window ).resize(function() {
+				gridDynamic.setGridHight("null");
+			});
+			gridDynamic.setGridHight("null");
+
+**/
+			return gridDynamic;
+		}
+
+	}
+
+ 
+ 
+ </script> 
+</html>
+
+
