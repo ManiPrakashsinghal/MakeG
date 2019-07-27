@@ -24,6 +24,15 @@ function Scroll(sagGridObj){
         this.totalRow = 0;
 
 	}
+	
+	Scroll.prototype.setRowLen = function(length){
+		this.rowLen = length;
+	}
+	
+	Scroll.prototype.resetScroll = function(){
+		this.addGridScroll();
+	}
+	
 
 	Scroll.prototype.changeRowDataLen = function(){
 		
@@ -36,6 +45,7 @@ function Scroll(sagGridObj){
 	Scroll.prototype.addGridScroll = function(){
 	
 					let thisObj = this;
+					
 					//verScroll
 					$((this.sagGridObj.gridEle).querySelectorAll("#verScroll")).unbind( "scroll" );
 					$((this.sagGridObj.gridEle).querySelectorAll("#verScroll")).scroll(function(event) {
@@ -63,6 +73,12 @@ function Scroll(sagGridObj){
 		//verScroll
 		$((this.sagGridObj.gridEle).querySelectorAll("#verScroll")).scrollTop(0);
 	}
+	
+	Scroll.prototype.scrollToIndex = function(rowIndex){
+		//verScroll
+		let scrollPos = rowIndex*this.sagGridObj.OneRowHeight;
+		$((this.sagGridObj.gridEle).querySelectorAll("#verScroll")).scrollTop(scrollPos);
+	}
 
  
 	Scroll.prototype.eventOnScroll = function(ele){
@@ -77,7 +93,15 @@ function Scroll(sagGridObj){
 		let rowStart = Math.round(st/thisObj.sagGridObj.OneRowHeight);
 		
 		if(rowCnt > 25){
-            $((this.sagGridObj.gridEle).querySelectorAll(".sagRow")).remove();
+			
+			//handle row grouping node to prevent from delete
+			if(this.sagGridObj.rowSpan){
+				$((this.sagGridObj.gridEle).querySelectorAll(".sagRow")).not(".sagGroupRow").remove();
+			}else{
+				$((this.sagGridObj.gridEle).querySelectorAll(".sagRow")).remove();
+			}
+			
+   
             thisObj.sagGridObj.gridRowIndexArray = [];
             
             let fromIndex = rowStart - 25;
@@ -168,29 +192,55 @@ function Scroll(sagGridObj){
 	   this.downIndex++;
    }
    
-   Scroll.prototype.addRowByIndex = function(index){
-	   if( index >= 0  && index < this.rowLen && !(this.sagGridObj.gridRowIndexArray.includes(index))){
-
-		   let gridRowHtmlTest = this.gridRowObj.getRowHtml(index);
-		  
-		   this.sagGridObj.addGridRowDom(gridRowHtmlTest);
-		   
-            //store row index 
- 		   this.sagGridObj.gridRowIndexArray.push(index); 
-	   }
+   Scroll.prototype.addRowByIndex = function(index,addFlag){
+	   
+				let self = this;
+				this.gridRowObj = this.sagGridObj.gridRowObj;
+			   if( index >= 0  && index < this.rowLen && !(this.sagGridObj.gridRowIndexArray.includes(index))){
+		
+				   //handle row grouping node to prevent from remove groped node from add because its note deleted
+					if(self.sagGridObj.rowSpan && self.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(index)){
+						
+						//in future handle what we do for this condition 
+						if(!self.sagGridObj.inDomRowSpanIndex.includes(String(index))){
+							let gridRowHtmlTest = self.gridRowObj.getRowHtml(index);
+							self.sagGridObj.addGridRowDom(gridRowHtmlTest);   
+							self.sagGridObj.inDomRowSpanIndex.push(index);
+						}
+						
+					}else{
+					   let gridRowHtmlTest = self.gridRowObj.getRowHtml(index);
+					   self.sagGridObj.addGridRowDom(gridRowHtmlTest);   
+					}
+					
+					if(addFlag == undefined){
+						//store row index 
+					   self.sagGridObj.gridRowIndexArray.push(index); 
+					}
+			   }
    }
    
    Scroll.prototype.deleteRowByIndex = function(index){
 	   if(this.sagGridObj.gridRowIndexArray.includes(index)){
-		    let rowId = 'row_'+index; 
-		    let rowVal = (this.sagGridObj.gridEle).querySelectorAll('#'+rowId);  //document.querySelectorAll('#'+this.sourceDivId+' .sag_grid_table_main .table_body #'+rowId);//(this.tableBody).querySelectorAll('#'+rowId);  //
-		    $(rowVal).remove();
-		    //remove row index from storage after delete row 
-	 		let arr = this.sagGridObj.gridRowIndexArray; 
-	 		let val = index;
-	 		this.sagGridObj.gridRowIndexArray =  arr.filter(function(ele){
-	 		       return ele != val;
-	 		   });
+		   
+		   //handle row grouping node to prevent from remove groped node from add because its note deleted
+			if(this.sagGridObj.rowSpan && this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(index)){
+				//in future handle what we do for this condition 
+			
+			}else{
+			    let rowId = 'row_'+index; 
+			    let rowVal = (this.sagGridObj.gridEle).querySelectorAll('#'+rowId);  //document.querySelectorAll('#'+this.sourceDivId+' .sag_grid_table_main .table_body #'+rowId);//(this.tableBody).querySelectorAll('#'+rowId);  //
+			    $(rowVal).remove();
+			}
+			
+	
+				//remove row index from storage after delete row 
+				let arr = this.sagGridObj.gridRowIndexArray; 
+				let val = index;
+				this.sagGridObj.gridRowIndexArray =  arr.filter(function(ele){
+					   return ele != val;
+				   });
+			
         }
    }
    

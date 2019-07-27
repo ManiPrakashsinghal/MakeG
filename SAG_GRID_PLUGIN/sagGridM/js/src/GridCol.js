@@ -60,22 +60,51 @@
      GridCol.prototype.createCol = function(index,j,styleLeft,pos){
 
 
+    	 		let self = this;
                 let obj = this.sagGridObj.rowData[index];
                 let columns = this.sagGridObj.colData;
                 
                 let sag_G_Index = obj.sag_G_Index;
+                
+                
+   
 
                 let styleWidth = columns[j]["width"];  //this.styleWidth;
-                let styleHight = this.cellHeight;
                 let colHtml = '';
                 
        
                 let field = columns[j]["field"];
+                
+                //for row spanning
+                let styleHight = this.cellHeight;
+                let rowSpanSno = "";
+                let isRowGrouped = false;
+                if(this.sagGridObj.rowSpan){
+                
+                	if(this.sagGridObj.conditionMerzemanager.mrzeColumnList.includes(field)){
+                		
+                		if(this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(sag_G_Index)){            			
+                			let rowSpanHightVal = this.sagGridObj.rowObjSpanIndexWidth[sag_G_Index]["height"];
+                			styleHight = styleHight*rowSpanHightVal;
+                			rowSpanSno = this.sagGridObj.rowObjSpanIndexWidth[sag_G_Index]["index"];
+                			isRowGrouped = true;
+                		}else{
+                			rowSpanSno = index+1;
+                		}
+                	}else{
+                		rowSpanSno = index+1;
+                	}
+                	
+                }
+                
+                
                 let colClass = columns[j]["sagColClass"];   //this.sagGridObj.colIdArray[pos][j];   //'col'+j;
                 
                 let textAlign = 'left';
 				if (columns[j].hasOwnProperty("text-align")) {
 					textAlign = columns[j]["text-align"];
+				 }else if (columns[j].hasOwnProperty("align")) {
+					textAlign = columns[j]["align"];
 				 }
 				
 				let attributes = {};
@@ -88,14 +117,23 @@
 				attributes["sag_G_Index"] = sag_G_Index;
 				attributes["sag_G_Key"] = field;
 				attributes["index"]= index;
+				attributes["tabindex"] ="-1";
+				attributes["tabIndex_col"] =j;
+				attributes["tabIndex_row"] =index;
+				 
 				
                 
 				let fieldVal = ''
 				
             	if(field == 'id'){
 					fieldVal = sag_G_Index;
+				}else if(field == 'sno' && this.sagGridObj.rowSpan ){
+					
+					fieldVal = rowSpanSno;
+				
 				}else if(field == 'sno'){
 					fieldVal = index+1;
+					obj[field] = fieldVal;
 				}else{
 					
 					if (!columns[j].hasOwnProperty("component")) {
@@ -107,7 +145,7 @@
 						 
 						 attributes["component"] = conponentName;
 						 attributes["keyValue"] = val;
-						 
+						
 						 let compObj = this.sagGridObj.components[conponentName];
 						// let compObj = new component();
 						 let params = {
@@ -129,6 +167,11 @@
 					fieldVal = " ";
 				}
 				
+				//Row by Grouping
+				/*if( j == 0 && sag_G_Index < 0){
+					fieldVal = obj["RowGroupingText"];
+				}*/
+				
 				
 				/**
 				 * Cell Render view work start
@@ -138,18 +181,32 @@
 					 let compObj = this.sagGridObj.components[conponentName];
 					 //let compObj = new component();
 					 let params = {
+							 
 							 "rowIndex":sag_G_Index,
 							 "colKey":field,
 							 "rowValue":obj,
 							 "colValue":columns[j],
 							 "value":fieldVal,
+							 "sagGridObj":this.sagGridObj,
 					 };
 					 compObj.init(params);
 					 fieldVal = compObj.getGui();	
 					 compObj.afterGuiAttached();
+					
+		
+					 compObj.onChangeValue(function(rowIndex,colKey,val){
+						 self.sagGridObj.rowData[rowIndex][colKey] = val;
+					 });
 				 }
 			
 				let nodeObject = {};
+				let styleObj = {"width":styleWidth,"left":styleLeft+"px","height":styleHight+"px","text-align":textAlign};
+				
+				if(this.sagGridObj.setRowPropertyObj.hasOwnProperty(sag_G_Index)){
+                	
+					styleObj = Object.assign(styleObj, this.sagGridObj.setRowPropertyObj[sag_G_Index]);
+					
+                }
 				
 				if (columns[j]["colType"] == "checkBox"){
 					let cls = Property.fontAwsmClass.unChecked;
@@ -163,8 +220,8 @@
 					   nodeObject = {
 								"nodeType":"div",
 								"attributes":attributes,
-								"classes":["grid_cell","cellEventListnr",colClass],
-								"styles":{"width":styleWidth,"left":styleLeft+"px","height":styleHight+"px","text-align":textAlign},
+								"classes":["grid_cell","gridNavigationEvent","cellEventListnr",colClass],
+								"styles":styleObj,
 								"childNode":[
 									{
 										"nodeType":"span",
@@ -179,8 +236,8 @@
 				   nodeObject = {
 							"nodeType":"div",
 							"attributes":attributes,
-							"classes":["grid_cell","cellEventListnr",colClass],
-							"styles":{"width":styleWidth,"left":styleLeft+"px","height":styleHight+"px","text-align":textAlign},
+							"classes":["grid_cell","gridNavigationEvent","cellEventListnr",colClass],
+							"styles":styleObj,
 							"props":{"innerHTML":fieldVal},							
 				  };
 				  
@@ -201,22 +258,111 @@
 					nodeObject.classes.push("sml_slectedRow");
 				}
 				
+				//for row grouping 
+				// if(this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(sag_G_Index) && this.sagGridObj.conditionMerzemanager.mrzeColumnList.includes(field) ){  //with only selected cell  field
+				if(isRowGrouped){
+					nodeObject.classes.push("cellGroupSelected");
+		 		 }
+				
 				colHtml = this.createElement(nodeObject,"null");
 				//colHtml  = GeneralEvent.createHtmlStrFromEle(colHtml); 
                 return colHtml;
 
      }
      
-	 
-	 
+     
+     //refresh column Data in grid 
+     GridCol.prototype.refreshCol = function(colKey){
+    
+    	 let self = this;
+    	 let gridAllCol = (this.sagGridObj.gridEle).querySelectorAll('div[sag_g_key="'+colKey+'"].grid_cell');
+    	 for(let i=0;i<gridAllCol.length;i++){
+    		 
+    		let fieldVal = 'YES'; 
+    		let prNode = gridAllCol[i];
+    		let sag_G_Index= parseInt(gridAllCol[0].getAttribute("sag_g_index"));
+    		let index  = parseInt(gridAllCol[0].getAttribute("index"));
+        	let field= gridAllCol[0].getAttribute("sag_g_key");
+ 
+        	let colData = _.find(this.sagGridObj.colData, { 'field': field});
+        	let obj = this.sagGridObj.originalRowData[sag_G_Index];
+           
+        	if(field == 'id'){
+				fieldVal = sag_G_Index;
+			}else if(field == 'sno'){
+				fieldVal = index+1;
+			}else{
+				
+				if (!colData.hasOwnProperty("component")) {
+					fieldVal = obj[field];
+				 }else{
+					 
+					 let val = obj[field];
+					 let conponentName = colData["component"];
+					 
+					// attributes["component"] = conponentName;
+					 //attributes["keyValue"] = val;
+					 
+					 let compObj = this.sagGridObj.components[conponentName];
+					// let compObj = new component();
+					 let params = {
+							 "rowIndex":sag_G_Index,
+							 "colKey":field,
+							 "rowValue":obj,
+							 "colValue":colData,
+							 "value":val,
+					 };
+					 compObj.init(params);
+					 //fieldVal = compObj.getValue();
+					 fieldVal = compObj.getTextView();
+				 }	
+			
+			}
+
+			if(fieldVal == null || fieldVal == undefined){
+				fieldVal = " ";
+			}
+			
+			/**
+			 * Cell Render view work start
+			 */
+			if (colData.hasOwnProperty("cellRenderView")) {
+				 let conponentName = colData["cellRenderView"];
+				 let compObj = this.sagGridObj.components[conponentName];
+				 //let compObj = new component();
+				 let params = {
+						 "rowIndex":sag_G_Index,
+						 "colKey":field,
+						 "rowValue":obj,
+						 "colValue":colData,
+						 "value":fieldVal,
+						 "sagGridObj":this.sagGridObj,
+				 };
+				 compObj.init(params);
+				 fieldVal = compObj.getGui();	
+				 compObj.afterGuiAttached();
+			
+				 compObj.onChangeValue(function(rowIndex,colKey,val){
+					 self.sagGridObj.rowData[rowIndex][colKey] = val;
+				 });
+			 }
+        
+        	prNode.innerHTML = "";
+        	prNode.append(fieldVal);
+		 
+    	 }
+
+    	 console.log(gridAllCol);
+ 
+     }
+     
+	
 	 GridCol.prototype.clickOngrid_cell = function(){
 		 
 		 $('div.grid_cell').ondblclick = function(){console.log("click success")};
 		
 	 }
-     
-     
-     
+      
      GridCol.prototype.createElement = function(nodeObj,fieldVal) {
     	    
      	let nodeType = nodeObj.nodeType;

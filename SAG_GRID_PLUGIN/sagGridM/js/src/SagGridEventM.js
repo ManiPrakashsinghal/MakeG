@@ -4,7 +4,8 @@ function SagGridEvent(sagGridObj){
     this.searchColObj = {};
     this.currentSortCol = null;
    
-    this.filterObj  = new SagFilter(sagGridObj); 
+   // this.filterObj  = new SagFilter(sagGridObj); 
+    this.filterObj  = new Filter(sagGridObj); 
 
 
 }
@@ -18,14 +19,32 @@ SagGridEvent.prototype.addClickListner = function(){
 		this.addFilterClick();
 	    this.recordFilterOK();
 	    this.allCheckBoxCheck();
+	    this.allCheckBoxColorChange();
 	    this.singleCheckBoxClick();
 	    this.searchPopUpFilterClick();
 	    this.addRowHoverEvent();
 	       
-	   // this.addCellKeyEvent();
+	    this.addCellKeyEvent();
 	    this.addCellEditing();
-	   
+
 }
+
+SagGridEvent.prototype.createRowSnapping = function(){
+	
+	/*let allColNode = (this.sagGridObj.gridEle).querySelectorAll('[sag_g_key="section"]');
+	for(let i=0;i<allColNode.length;i++){
+
+		let colDiv = allColNode[0];
+		let rowIndex = colDiv.getAttribute("index");
+		let val = colDiv.innerText;
+		let offSetHeight = colDiv.offsetHeight;
+		
+		console.log(rowIndex);
+		
+	}*/
+	
+}
+
 
 SagGridEvent.prototype.searchFilter = function(){
 
@@ -67,7 +86,11 @@ SagGridEvent.prototype.applySearch = function(){
     self.sagGridObj.rowData= self.sagGridObj.originalRowData.filter(function(item) {
 	  for (var key in filterdSerchColObj) {
 		  try{
-			   if((((item[key]).toLowerCase()).indexOf((filterdSerchColObj[key]).toLowerCase())) < 0 ){
+			  
+			  let dataVal = (item[key]).toString();
+			  let sVal = (filterdSerchColObj[key]).toString();
+			  
+			   if(((dataVal.toLowerCase()).indexOf(sVal.toLowerCase())) < 0 ){
 				   return false;
 			   }
 		  }catch(err){
@@ -386,10 +409,10 @@ SagGridEvent.prototype.onClickSagComponent = function(ele) {
 SagGridEvent.prototype.singleCheckBoxClick = function(){
 	
 	 let self = this;
-	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.filterRowInput');
+	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.filterRowInputClickEvent');
 	 for (var i = 0, len = nodeList.length; i < len; i++) {
 	    let ele = nodeList[i];
-	   $(ele).removeClass("filterRowInput");
+	   $(ele).removeClass("filterRowInputClickEvent");
 	    ele.addEventListener("click", function(e){ 
 	    	self.filterObj.onClickAllCheckBox(ele);
 	    }, false);
@@ -408,7 +431,8 @@ SagGridEvent.prototype.searchPopUpFilterClick = function(el){
 	    $(ele).removeClass("popup-filetr-search");
 	    ele.addEventListener("keyup", function(event){
 	    	 $('.filterRow').remove();
-	    	self.filterObj.onSearchPopUpFilterClick(ele);
+	    	//self.filterObj.onSearchPopUpFilterClick(ele);
+	    	 self.filterObj.InputTextSearchPopUp_ClickEvent(ele);
 	    });
 	}
 }
@@ -423,7 +447,8 @@ SagGridEvent.prototype.addFilterClick = function(){
 	    let ele = nodeList[i];
 	    $(ele).removeClass("filterDropdown");
 	    ele.addEventListener("click", function(e){ 
-	    	self.filterObj.onFilterClick(ele);
+	    	//self.filterObj.onFilterClick(ele);
+	    	  self.filterObj.createFilterPopUp(ele);
 	    }, false);
 	 }
 }
@@ -437,7 +462,8 @@ SagGridEvent.prototype.recordFilterOK = function(el){
 	    let ele = nodeList[i];
 	    $(ele).removeClass("btnFilter");
 	    ele.addEventListener("click", function(e){ 
-	    	self.filterObj.onFilterOkButtonClick(ele);
+	    	//self.filterObj.onFilterOkButtonClick(ele);
+	    	self.filterObj.OkButton_FilterClickEvent(ele);
 	    }, false);
 	 }
 }
@@ -447,16 +473,34 @@ SagGridEvent.prototype.allCheckBoxCheck = function(ele){
 
 	 let self = this;
 	 var state = false; 
-	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('input.allCheckbox');
+	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('input.checked_all');
 	 for (var i = 0, len = nodeList.length; i < len; i++) {
 	    let ele = nodeList[i];
-	   $(ele).removeClass("allCheckbox");
+	   $(ele).removeClass("checked_all");
 	    ele.addEventListener("click", function(e){ 
-	    	self.filterObj.onClickAllCheckBox(ele,state);
+	    	//self.filterObj.onClickAllCheckBox(ele,state);
+	    	self.filterObj.AllCheckBox_ClickEvent(ele);
 	    }, false);
 	 }
 
 	}
+
+SagGridEvent.prototype.allCheckBoxColorChange = function(ele){
+
+	 let self = this;
+	 var state = false; 
+	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.removeCheckColor');
+	 for (var i = 0, len = nodeList.length; i < len; i++) {
+	    let ele = nodeList[i];
+	   $(ele).removeClass("removeCheckColor");
+	    ele.addEventListener("click", function(e){ 
+	    	self.filterObj.AllCheckBoxRemoveColorBlue_ClickEvent(ele);
+	    }, false);
+	 }
+
+	}
+
+
 //* filter working end *//
 
 
@@ -563,7 +607,7 @@ SagGridEvent.prototype.onCellClick = function(ele){
 
 SagGridEvent.prototype.addExportClick = function(){
 	
-	let self = this;
+	let self = this; 
     let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.allPageExport');
     for (var i = 0, len = nodeList.length; i < len; i++) {
         let ele = nodeList[i];
@@ -579,7 +623,9 @@ SagGridEvent.prototype.addExportClick = function(){
 
 SagGridEvent.prototype.addCellKeyEvent = function(){
 	
-	document.onkeydown 				= this.onKeyDown;
+	let navObj = new GridNavigation(this.sagGridObj);
+	
+	//document.onkeydown 				= this.onKeyDown;
 	
 /*	let self = this;
     let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.cellEventListnr');
@@ -598,7 +644,7 @@ SagGridEvent.prototype.onCellSelect = function(ele){
 }
 
 
-SagGridEvent.prototype.onKeyDown  = function(e){
+/*SagGridEvent.prototype.onKeyDown  = function(e){
 	
 	let self = this;
 	
@@ -630,7 +676,7 @@ SagGridEvent.prototype.onKeyDown  = function(e){
 		
 	}
 	
-}
+}*/
 
 
 SagGridEvent.prototype.showFooterSum = function(){
@@ -660,7 +706,76 @@ SagGridEvent.prototype.showFooterSum = function(){
 		  ele.innerHTML = sum;	  		  
 	}
 	
+	
+	if(self.sagGridObj.columnTotal){
+		
+		for (var tKey in self.sagGridObj.columnTotal) {
+			
+			  let sum = Number(self.sagGridObj.columnTotal[tKey]);
+			  sum = sum.toFixed(2)
+			  self.sagGridObj.totalFooterCol[tKey] =  sum;
+			  let ele  = (self.sagGridObj.gridEle).querySelector('div[sag_g_key="'+tKey+'"].totalField');
+			  ele.innerHTML = sum;	  		  
+		}
+		
+	}
+
+	
 }
+
+SagGridEvent.prototype.headerComponent = function(){
+	
+
+	 let nodeList = (this.sagGridObj.gridEle).querySelectorAll('[headercomponent].headerComponent');
+	    for (var i = 0, len = nodeList.length; i < len; i++) {
+	        let ele = nodeList[i];
+	        $(ele).removeClass("headerComponent");
+	        let compName = ele.getAttribute("headerComponent");
+	        let compObj = this.sagGridObj.components[compName];
+	        compObj.afterGuiAttached(ele,this.sagGridObj);
+	    }
+	
+	
+}
+
+SagGridEvent.prototype.refreshCol = function(colKey){
+	
+	let gridColObj = new GridCol(this.sagGridObj);
+	gridColObj.refreshCol(colKey);
+
+}
+
+/* used for tabbing for chnage clr row and select row in space button click */
+SagGridEvent.prototype.setRowSelectInTab = function(var_index){
+	this.sagGridObj.gridEventObj.selectedRowINdex = var_index;
+	this.sagGridObj.generalEvntObj.selectRowClrChange(var_index);
+}
+
+
+/* Grid expand full screen */
+SagGridEvent.prototype.GridExpandClick = function(){
+	
+	let self = this; 
+    let nodeList = (this.sagGridObj.gridEle).querySelectorAll('.addExpandClick');
+    for (var i = 0, len = nodeList.length; i < len; i++) {
+        let ele = nodeList[i];
+        $(ele).removeClass("addExpandClick");
+        ele.addEventListener("click", function(e){       
+        	self.GridExpand(ele);
+        }, false);
+    }
+}
+
+SagGridEvent.prototype.GridExpand = function(){
+	
+	 let tableMain = (this.sagGridObj.gridEle).querySelector('#slm_tableMain');
+	 if(tableMain.classList.contains("smlFullPageScreen")){
+		 tableMain.classList.remove("smlFullPageScreen");
+	 }else{
+		 tableMain.classList.add("smlFullPageScreen");
+	 }
+}
+
 
 
 

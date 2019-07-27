@@ -3,6 +3,7 @@ function SagInputText(optn,callBack) {
 	
 	this.optionArray = optn;
 	this.callBackFn = callBack;
+	this.param = {};
 }
 
 // gets called once before the renderer is used
@@ -10,6 +11,7 @@ SagInputText.prototype.init = function(params) {
     // create the cell
     this.eInput = document.createElement('input');
     this.eInput.value = params.value;
+	this.param =params; 
 };
 
 // gets called once when grid ready to insert the element
@@ -20,6 +22,7 @@ SagInputText.prototype.getGui = function() {
 // focus and select can be done after the gui is attached
 SagInputText.prototype.afterGuiAttached = function() {
     this.eInput.focus();
+	this.callBackFn(this.eInput,this.param);
 };
 
 // returns the new value after editing
@@ -53,6 +56,10 @@ SagInputText.prototype.isPopup = function() {
     return false;
 };
 
+SagInputText.prototype.onChangeValue = function(callBack){
+		callBack();
+}
+
 //all events 
 SagInputText.prototype.preventDefaultEvent = function() {
   
@@ -65,7 +72,7 @@ SagInputText.prototype.preventDefaultEvent = function() {
     this.eInput.addEventListener("keyup", function(event) {
 		  // Number 13 is the "Enter" key on the keyboard
 		  if (event.keyCode === 13) {
-		    event.preventDefault();
+		   // event.preventDefault();
 		  }
 		});
 };

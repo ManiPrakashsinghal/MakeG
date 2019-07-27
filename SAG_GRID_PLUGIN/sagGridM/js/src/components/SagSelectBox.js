@@ -92,6 +92,11 @@ SagSelectBox.prototype.isPopup = function() {
     return false;
 };
 
+//create for change value in cellRenderView when component value chnage 
+SagSelectBox.prototype.onChangeValue = function(callBack){
+
+}
+
 //all events 
 SagSelectBox.prototype.preventDefaultEvent = function() {
   

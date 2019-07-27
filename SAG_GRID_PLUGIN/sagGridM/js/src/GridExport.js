@@ -50,8 +50,8 @@ GridExport.prototype.exportGridData = function(exportMode,typeOfExp,pageOrient){
 	let self = this.sagGridObj;
 	
 
-	let rowData = Array.from(self.originalRowData);
-	let gridRowData = Array.from(self.originalRowData);
+	let rowData = Array.from(self.rowData);
+	let gridRowData = Array.from(self.rowData);
 	let colData = Array.from(self.originalColData);
 	
 	for(let c=0;c<colData.length;c++){
@@ -111,11 +111,11 @@ GridExport.prototype.exportGridData = function(exportMode,typeOfExp,pageOrient){
 		mergeObj["rows"] 		= gridRowData;
 	
 	if(self.ExcelExportService != null && self.ExcelExportService != null){
-		/*if(self.sheatDetailsfun){
+		if(self.sheatDetailsfun){
 			mergeObj["sheatDetails"] = self.sheatDetailsfun();
-		}else
-		if(self.sheatDetails)*/
+		}else if(self.sheatDetails){
 			mergeObj["sheatDetails"] = self.sheatDetails;
+		}
 		/*typeOfExp,pageOrient*/
 		if(typeOfExp=="xlsx"){
 			self.ExcelExportService.gridDataExport(mergeObj,"xlsx")

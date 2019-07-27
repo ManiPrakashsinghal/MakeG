@@ -17,8 +17,10 @@ BottomScroll.prototype.ceateScroll = function(){
 	})(jQuery);
 	
 	 //$((this.sagGridObj.gridEle).querySelectorAll("#BottomScrollBar")).show();
+	
+
  	 var targetForScroll = ((this.sagGridObj.gridEle).querySelectorAll("#centerGrid")[0]);
-	if($(targetForScroll).hasScrollBar()){
+	//if($(targetForScroll).hasScrollBar()){
 		       
 				let rightWidth = $((this.sagGridObj.gridEle).querySelectorAll("#rightGrid")).width();
 			 	let leftWidth = $((this.sagGridObj.gridEle).querySelectorAll("#leftGrid")).width();
@@ -28,7 +30,8 @@ BottomScroll.prototype.ceateScroll = function(){
 			 	let centerWidth = fullWidth - rightWidth - leftWidth - 17;
 			 	
 
-			 	let centerScrollWidth = ((this.sagGridObj.gridEle).querySelectorAll("#centerGrid")[0]).scrollWidth;
+				//replace center table calculation from center header #centerGrid --> .center-tbl-header
+			 	let centerScrollWidth = ((this.sagGridObj.gridEle).querySelectorAll(".center-tbl-header")[0]).scrollWidth;
 			 	
 			 	$((this.sagGridObj.gridEle).querySelectorAll(".secondCenterScroll")).width(centerScrollWidth);
 			 	
@@ -38,14 +41,14 @@ BottomScroll.prototype.ceateScroll = function(){
 			 	
 			 	$((this.sagGridObj.gridEle).querySelectorAll("#secondRightScroll")).width(rightWidth);
 			 	
-			 	$((this.sagGridObj.gridEle).querySelector("#secondCenterScroll")).scroll(function() {  
+			 	/*$((this.sagGridObj.gridEle).querySelector("#secondCenterScroll")).scroll(function() {  
 			    	 $(targetForScroll).prop("scrollLeft", this.scrollLeft);  
 			    	 $((thisObj.sagGridObj.gridEle).querySelectorAll(".center-tbl-header")).prop("scrollLeft", this.scrollLeft);  	 
-			    });
+			    });*/
 			
-		}else{
+	//	}else{
 			//$((this.sagGridObj.gridEle).querySelectorAll("#BottomScrollBar")).hide();
-		}
+	//	}
 }
 
 //manage scroll for searching 
@@ -60,22 +63,33 @@ BottomScroll.prototype.manageScroll = function(){
 		})(jQuery);
 	
 		let thisObj = this;
+		
+		/*let headerScrollEle = ".center-tbl-header";
+		let centerScrollEle = "#centerGrid";
+		let footerScrollEle = "#secondCenterScroll";*/
+		
+		let headerScrollEle = ".center-tbl-header";
+		let centerScrollEle = "#secondCenterScroll";
+		let footerScrollEle = "#centerGrid";
 	
-		var targetForScroll = ((thisObj.sagGridObj.gridEle).querySelector("#secondCenterScroll"));
+		var targetForScroll = ((thisObj.sagGridObj.gridEle).querySelector(footerScrollEle));
 		if($(targetForScroll).hasScrollBar()){
 			let bottomScroll = targetForScroll.scrollLeft;
-			$((this.sagGridObj.gridEle).querySelectorAll("#centerGrid")).prop("scrollLeft", bottomScroll); 
-			$((thisObj.sagGridObj.gridEle).querySelectorAll(".center-tbl-header")).prop("scrollLeft", bottomScroll); 
+			$((this.sagGridObj.gridEle).querySelectorAll(centerScrollEle)).prop("scrollLeft", bottomScroll); 
+			$((thisObj.sagGridObj.gridEle).querySelectorAll(headerScrollEle)).prop("scrollLeft", bottomScroll); 
 			
 			
-			$((thisObj.sagGridObj.gridEle).querySelector("#secondCenterScroll")).scroll(function() {  
+			$((thisObj.sagGridObj.gridEle).querySelector(footerScrollEle)).scroll(function() {  
 		    	 $(targetForScroll).prop("scrollLeft", this.scrollLeft);  
-		    	 $((thisObj.sagGridObj.gridEle).querySelectorAll(".center-tbl-header")).prop("scrollLeft", this.scrollLeft);  
-		    	 $((thisObj.sagGridObj.gridEle).querySelectorAll("#centerGrid")).prop("scrollLeft", this.scrollLeft); 
+		    	 $((thisObj.sagGridObj.gridEle).querySelectorAll(headerScrollEle)).prop("scrollLeft", this.scrollLeft);  
+		    	 $((thisObj.sagGridObj.gridEle).querySelectorAll(centerScrollEle)).prop("scrollLeft", this.scrollLeft); 
 		    	 targetForScroll.setAttribute("onScrollEvent",true);
 		    });
 			
 		}		
+		
+		this.applyScrollOnChange();
+		
 }
 
 // applyScrollOnChange on resize
@@ -97,14 +111,14 @@ BottomScroll.prototype.applyScrollOnChange = function(){
 	let thisObj = this;
 	var targetForScroll = ((thisObj.sagGridObj.gridEle).querySelector("#secondCenterScroll"));
 	 
-	if($(targetForScroll).hasScrollBar()){
+	//if($(targetForScroll).hasScrollBar()){
 		if(targetForScroll.getAttribute("onScrollEvent")){
 			
 		}else{
 			targetForScroll.addEventListener("scroll",onScrollEvent);
 			targetForScroll.setAttribute("onScrollEvent",true);
 		}
-	}		
+	//}		
 	
 }
 

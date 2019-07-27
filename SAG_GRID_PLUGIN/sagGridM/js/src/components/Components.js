@@ -11,6 +11,12 @@ document.write('<script type="text/javascript" src="sagGridM/js/src/components/S
 document.write("<script type='text/javascript' src='sagGridM/js/src/components/SagCheckBox.js'></script>");
 document.write("<script type='text/javascript' src='sagGridM/js/src/HideShowCol.js'></script>");
 document.write("<script type='text/javascript' src='sagGridM/js/src/RowGroup.js'></script>");
+document.write("<script type='text/javascript' src='sagGridM/js/src/SagFilter.js'></script>");
+
+document.write("<script type='text/javascript' src='sagGridM/js/src/components/headerCheckBox.js'></script>");
+document.write("<script type='text/javascript' src='sagGridM/js/src/DragRowGrouping.js'></script>");
+document.write("<script type='text/javascript' src='sagGridM/js/src/gridNavigation.js'></script>");
+
 
 
 function Components(){

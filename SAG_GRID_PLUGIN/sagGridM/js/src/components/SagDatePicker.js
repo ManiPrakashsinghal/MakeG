@@ -102,6 +102,10 @@ SagDatePicker.prototype.isPopup = function() {
 		return true;
 };
 
+SagDatePicker.prototype.onChangeValue = function(callBack){
+
+}
+
 //all events 
 SagDatePicker.prototype.preventDefaultEvent = function() {
   

@@ -13,7 +13,7 @@
   <style>
 
 .mainDivTbody {
-    height: 600px !important;
+    height: 500px !important;
     overflow-y: scroll;
     overflow-x: hidden;
     -moz-flex: 1;
@@ -33,6 +33,11 @@
 	</div>
 
    </div>
+   
+   <button id="sml_btn_add"> ADD </button>
+   
+   <button id="sml_btn_delete"> DELETE </button>
+   
 <script>
 
 function stopLoader(){
@@ -40,12 +45,50 @@ function stopLoader(){
 }
 
 
+
+
 var rowsDataAPI= API_Data.data;
+
+
+let rowJson = {
+  "indName": null,
+  "indFrname": null,
+  "indDob": null,
+  "refClientid": null,
+  "mclientId": "",
+  "othindId": "",
+  "clientId": "",
+  "clientType": "",
+  "othindName": "A",
+  "othindShortname": "",
+  "othindSbzdt": "",
+  "othindEbzdt": "",
+  "othindIncrpdt": " ",
+  "statusname": "",
+  "pan": "",
+  "mobileNo": "",
+  "mailEmail": "@",
+  "gstnNo": "",
+  "groupName": "",
+  "gstnId": "",
+  "clientCode": "",
+  "consAdr": " INDIA 134002",
+  "gstnActive": "",
+  "gstnStatus": "",
+  "gstnDty": "",
+  "gstRgdt": "01/07/2017",
+  "gstnCmpyn": "N",
+  "stateName": "",
+  "gstnUsrcode": "",
+  "gstnPassword": "@",
+  "clientyearId": 250
+};
+
 
 addGrid(rowsDataAPI);
 
 
-function addGrid(rowsData){
+ function addGrid(rowsData){
 		
 
 		var sourceDiv = document.getElementById("GridSourceDiv");
@@ -92,6 +135,7 @@ function addGrid(rowsData){
 				     	   search : true,
 				     	   width:"140px",
 				     	   "text-align":"center",
+						    component:"in1",
 				     	   "attributes":{
 				     	   //"ng-click" : "selectRow()",
 				     	   //"ng-dblclick" : "modifyBySelectRow()"
@@ -104,6 +148,7 @@ function addGrid(rowsData){
 				     	   search : true,
 				     	   width:"130px",
 				     	   "text-align":"center",
+						    component:"in2",
 				     	   "attributes":{
 				     	   //"ng-click" : "selectRow()",
 				     	   //"ng-dblclick" : "modifyBySelectRow()"
@@ -299,37 +344,54 @@ function addGrid(rowsData){
 				        ];
 
 		var rowsDataCopy = rowsData;
-		for(var i=0;i<rowsDataCopy.length;i++){
-			rowsDataCopy[i]["sno"] = i+1;
-			rowsDataCopy[i]["checkbox"]="<input type=\"checkbox\" ng-click=\"selectRow()\" class=\"errorClass\">";
-
-			if(rowsDataCopy[i]["gstnStatus"] == "N"){
-				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
-			}
-			else if (rowsDataCopy[i]["gstnStatus"] == "I"){
-				rowsDataCopy[i]["gstnStatus"]="INVALID";
-			}else if(rowsDataCopy[i]["gstnStatus"] == "V"){
-				if(rowsDataCopy[i]['gstnActive']!=null && rowsDataCopy[i]['gstnActive']=='A'){
-					rowsDataCopy[i]["gstnStatus"]="VALID(Active)";
-				}else if(rowsDataCopy[i]['gstnActive']!=null && rowsDataCopy[i]['gstnActive']=='N'){
-					rowsDataCopy[i]["gstnStatus"]="VALID(Active Pending Verification)";
-				}else{
-					rowsDataCopy[i]["gstnStatus"]="VALID";
-				}
-			}else if(rowsDataCopy[i]["gstnStatus"] == "Not Varified Gstin"){
-				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
-			}
-			else if (rowsDataCopy[i]["gstnStatus"] == "Invalid Gstin"){
-				rowsDataCopy[i]["gstnStatus"]="INVALID";
-			}else{
-				rowsDataCopy[i]["gstnStatus"]="NOT VERIFIED";
-			}
-		}
-
+	
 		var callBackMethode = {
 				"onRowClick":function(){},
 				"onRowDbleClick":function(){  }
 		};
+		
+		
+		var optArr = [
+				{"key":"","val":"-Select-"},
+				{"key":"FIL","val":"Filed"},
+				{"key":"NF","val":"Pending"},
+				{"key":"COM","val":"Completed"}
+			];
+		
+		let selectObj = new SagSelectBox(optArr,function(ele,params){
+			
+			console.log(ele);
+			console.log(params);
+			
+		});
+		
+		let inputObj1 = new SagInputText("",function(ar1){
+		
+				
+				alert("call");
+				console.log(ar1);
+		
+		});
+		let inputObj2 = new SagInputText("",function(ele,parObj){
+	
+				console.log(parObj);
+				let rowIndex = parObj.rowIndex;
+				let rowObj = parObj.rowValue;
+				let colKey = parObj.colKey;
+				rowObj["othindName"] = "updated";
+
+				$(ele).change(function(){
+					console.log(rowIndex);
+					 rowObj[colKey] = this.value;
+					gridDynamic.updateRow(rowIndex,rowObj);
+					
+				});
+		});
+		
+		 var components = {
+				"in1": selectObj,
+				"in2":inputObj2,
+			};
 		
 		
 		if( undefined != sourceDiv){
@@ -346,21 +408,33 @@ function addGrid(rowsData){
 					gridExportService	:	 null,//gridExportService,
 					frezzManager		:	{"checkBox":"left","sno":"left","othindName":"left","groupName":"left","clientCode":"left"},
 					sheatDetails :{sheatName:"Client_ClientCreation_Client_List",title:"Client Creation Client List",fileName : "Client_ClientCreation_Client_List"},
-					callBack:callBackMethode
+					callBack:callBackMethode,
+					components : components
 			};
 			var gridDynamic = SagGridMP(sourceDiv,gridData, null, null);
 			
-/**
+
 			$( window ).resize(function() {
 				gridDynamic.setGridHight("null");
 			});
 			gridDynamic.setGridHight("null");
 
-**/
+			$("#sml_btn_add").click(function(){
+					gridDynamic.addRow(1,rowJson);
+			});	
+
+
+			$("#sml_btn_delete").click(function(){
+				let index = gridDynamic.getSelectedRowIndex();
+				gridDynamic.deleteRow(index);
+			});	
+
+
 			return gridDynamic;
 		}
 
 	}
+
 
  
  

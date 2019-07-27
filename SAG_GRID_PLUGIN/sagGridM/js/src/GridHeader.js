@@ -232,12 +232,33 @@
 	   				   let headerHtml = '<div class="header_cell '+colClass+' sag_colDrag" colId='+colClass+' colPos='+pos+' colfield='+field+' style="width:'+styleWidth+'; left:'+styleLeft+'px; text-align:center; justify-content: center; ">'+header+'</div>';
 	   				   return headerHtml;
 	   				   
-                   }else{       
-	                   header = sortIcon+'<span class="sml_header_text" >'+text+'</span> <span field='+field+' class="float-right sagGridFilter filterDropdown"><i class="fa fa-align-justify"></i></span> <span class="float-right sagGridResize"><i class="fa fa-arrows-v"></i></span> ';
+                   }else{ 
+                	   
+                	   let compValue = "";
+                	   if(colmnData.hasOwnProperty("headerComponent")){
+                		   
+	                		 let conponentName = colmnData["headerComponent"];
+	      					 let compObj = this.sagGridObj.components[conponentName];
+	      					 //let compObj = new component();
+	      					 let params = {
+	      							 "compName":conponentName,
+	      							 "compObj":compObj,
+	      							 "compColKey":field
+	      					 };
+	      					 compObj.init(params);
+	      					 compValue = compObj.getGui();
+	      				   	 compValue = compValue.outerHTML;            	
+                	   }
+                	   let colFilter = '';
+                	   if(this.sagGridObj.rowSpan ? (this.sagGridObj.conditionMerzemanager.mrzeColumnList.includes(field)) : true){
+                		   colFilter = '<span field='+field+' class="float-right sagGridFilter filterDropdown"><i class="fa fa-align-justify"></i></span>';
+                	   }
+                	   
+	                   header = sortIcon+''+compValue+'<span class="sml_header_text" >'+text+'</span> '+colFilter+' <span class="float-right sagGridResize"><i class="fa fa-arrows-v"></i></span> ';
 	                   let colClass = 'col'+i; 
 	                   this.sagGridObj.colIdArray[pos].push(colClass);
 	                   let styleWidth = colmnData.width;   // this.styleWidth*(i+1);  
-	   				   let headerHtml = '<div class="header_cell '+colClass+' sag_colDrag" colId='+colClass+' colPos='+pos+' colfield='+field+' style="width:'+styleWidth+'; left:'+styleLeft+'px; text-align:center; ">'+header+'</div>';
+	   				   let headerHtml = '<div class="header_cell '+colClass+' rowGroupDrag sag_colDrag" colId='+colClass+' colPos='+pos+' colfield='+field+' style="width:'+styleWidth+'; left:'+styleLeft+'px; text-align:center; ">'+header+'</div>';
 	   				   return headerHtml;
                    }
         	}
@@ -266,7 +287,7 @@
                 para.style.left = styleLeft+'px';
               
                 
-                if(this.colData[i].search == true){
+                if(this.colData[i].search == true && (this.sagGridObj.rowSpan ? (this.sagGridObj.conditionMerzemanager.mrzeColumnList.includes(field)) : true)){
 					var searchInput = document.createElement("INPUT");
 					searchInput.setAttribute("type", "text");
 	                searchInput.setAttribute("field",obj.field);
@@ -322,7 +343,10 @@
       	  var floatLeftDiv = document.createElement('div');
       	      floatLeftDiv.className = 'pull-left';      	  
       	  var formCheckDiv = document.createElement('div');
-      	      formCheckDiv.className = 'form-check';
+      	      formCheckDiv.className = 'form-check checkBlkDiv';
+      	  	  var formCheckInnerDiv = document.createElement('div');
+      	  	     formCheckInnerDiv.className = 'all-checkbox-checked removeCheckColor';
+      	  	     formCheckInnerDiv.id = 'allCheckboxBlue';
       	  var formCheckInput = document.createElement('input');
 	        	  formCheckInput.className = 'form-check-input allCheckbox checked_all';
 	        	  formCheckInput.id = 'checkAll';
@@ -334,14 +358,16 @@
 	        	  formCheckLable.className = 'form-check-label';
 	        	  formCheckLable.setAttribute("for",'exampleRadios1');	        
 	        	  formCheckLable.innerHTML  = 'ALL';
+	        	  formCheckDiv.appendChild(formCheckInnerDiv);
 	        	  formCheckDiv.appendChild(formCheckInput);
-	        	  formCheckDiv.appendChild(formCheckLable);
+	        	  formCheckDiv.appendChild(formCheckLable);	        	
 	        	  floatLeftDiv.appendChild(formCheckDiv);
 	        	  blockDiv.appendChild(floatLeftDiv);
       	  var floatRightDiv = document.createElement('div');
-      	      floatRightDiv.className = 'pull-right';
+      	         floatRightDiv.className = 'pull-right';
       	  var floatRightButtonOk = document.createElement('button');
 	        	  floatRightButtonOk.className = 'btn btn-primary sagGridFilter btnFilter mr-1';
+	        	  floatRightButtonOk.id = 'btnFilterOkButton';
 	        	  floatRightButtonOk.innerHTML  = 'OK';
 	        	  floatRightDiv.appendChild(floatRightButtonOk);
       	  var floatRightButtonCancel = document.createElement('button');

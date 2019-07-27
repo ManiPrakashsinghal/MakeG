@@ -80,6 +80,23 @@
     	
     	let allCellEleNew = (this.sagGridObj.gridEle).querySelectorAll('[sag_g_index="'+rowIndex+'"]');
 	    $(allCellEleNew).addClass("sml_slectedRow"); //.css("background-color", '#9f9e9d');   //d8d8d8
+	    //this.sagGridObj.scrollObj.scrollToIndex(rowIndex);
+	    	 //allCellEleNew[0].scrollIntoView();
+
+    }
+    
+    
+    /** This method for setRow Property rowJson like that format {"color":"red"}; it will set tr attribute */
+    GeneralEvent.prototype.setRowStyleProperty = function(var_rowIndex,var_rowJson) {
+  
+       let allCellEleNew = (this.sagGridObj.gridEle).querySelectorAll('[sag_g_index="'+var_rowIndex+'"]');
+       var var_keys = Object.keys(var_rowJson);
+   	   for (var i = 0; i < allCellEleNew.length; i++) {
+	    	  var item = allCellEleNew[i];
+	    	  for(let j=0;j<var_keys.length;j++){
+	    		  item.style[var_keys[j]] = var_rowJson[var_keys[j]];
+	    	  }
+	    	}
     }
     
     

@@ -22,7 +22,7 @@ GridEvent.prototype.getCurrentPageNo  = function(){
 GridEvent.prototype.getSelectedRowIndex  = function(index){
 	let returnIndex = parseInt(this.selectedRowINdex);
 	if(returnIndex == undefined || isNaN(returnIndex)){
-		returnIndex = null;
+		returnIndex = -1;
 	}
 	return  returnIndex;
 }
@@ -31,16 +31,17 @@ GridEvent.prototype.setGridHight = function(param){
 	
 	
 	//set grid height
-	var totalHeight = headerHeight = pageHeaderHeaight = pageHeaderHeaight =  bottomLineHeight  =  sagButtonLine  =  tableGridHeaderFirst =  tableGridHeaderSecond  = footerGridHeight = tableGridTotalHeight = calculateHeight = sagFieldSecHeight =  sagtabsSectionNav = null;
+	 var totalHeight = headerHeight = pageHeaderHeaight = pageHeaderHeaight =  bottomLineHeight  =  sagButtonLine  =  tableGridHeaderFirst =  tableGridHeaderSecond  = footerGridHeight = tableGridTotalHeight = calculateHeight = sagFieldSecHeight =  sagtabsSectionNav = sagtabsSection2Nav = null;
 	 totalHeight = $(window).outerHeight(true);
 	 var outerHeight = 0;
 	 headerHeight = $('.site-header').outerHeight();
 	 pageHeaderHeaight = $('.page-content-header').outerHeight();
 	 sagFieldSecHeight = $('.sagFieldSec').outerHeight();
 	 sagtabsSectionNav = $('.tabs-section-nav').outerHeight();
+	 sagtabsSection2Nav = $('.tabs-section-nav-2').outerHeight();
 	 bottomLineHeight = $('.bottomline').outerHeight();
 	 sagButtonLine = $('.sagbootom-Line').outerHeight();
-	 outerHeight = headerHeight + pageHeaderHeaight + sagFieldSecHeight + sagtabsSectionNav + bottomLineHeight + sagButtonLine;
+	 outerHeight = headerHeight + pageHeaderHeaight + sagFieldSecHeight + sagtabsSectionNav + bottomLineHeight + sagButtonLine + sagtabsSection2Nav;
 
 	// tableGridHeaderFirst = $('.drag-div').outerHeight();
 	// tableGridHeaderSecond = $('#gridHeader').outerHeight();
@@ -62,7 +63,7 @@ GridEvent.prototype.setPageNumberSaveState  = function(param){
 
 
 GridEvent.prototype.getSeletedRowData  = function(){
-	if(this.selectedRowINdex != null){
+	if(this.selectedRowINdex != null && this.selectedRowINdex > -1){
 		var obj = this.sagGridObj.originalRowData[this.selectedRowINdex];
 		return obj;
 	}else{
@@ -75,7 +76,10 @@ GridEvent.prototype.getSeletedRowData  = function(){
 GridEvent.prototype.setRowSelected = function(var_index,status){
 	this.selectedRowINdex = var_index;
 	this.sagGridObj.generalEvntObj.selectRowClrChange(this.selectedRowINdex);
+	this.sagGridObj.scrollObj.scrollToIndex(var_index);
 }
+
+
 
 /**
 * This function for get data according to checked data
@@ -133,6 +137,130 @@ GridEvent.prototype.goAnyWherePage = function (pageNumber){
 }
 
 
+/**8.This Row For Inserting Perpose */
+GridEvent.prototype.addRow =function(var_index , json){
+	
+	let gridHeightEle = (this.sagGridObj.gridEle).querySelectorAll('.gridTHeight');
+	let oldHeight = $(gridHeightEle).css("height");
+	let newHeight = Number((oldHeight.split("px"))[0]) + this.sagGridObj.OneRowHeight;
+    $(gridHeightEle).css("height",newHeight);
+
+	let last_index = this.sagGridObj.originalRowData.length + 1;
+	
+	let var_rowJsonData  = Object.assign({},json);  
+	var_rowJsonData["sag_G_Index"]=last_index;
+
+	var_rowJsonData["groupName"] = last_index;
+	this.sagGridObj.originalRowData.push(var_rowJsonData);
+	
+	//reset data 
+	this.sagGridObj.resetGridData();
+	
+	
+	//let scrollObj = new Scroll(this.sagGridObj);
+	// this.sagGridObj.scrollObj.setRowLen(last_index);
+	this.sagGridObj.scrollObj.addRowByIndex(last_index-1);
+	this.sagGridObj.scrollObj.resetScroll();
+	this.sagGridObj.scrollObj.scrollToIndex(last_index-1);
+
+}
+
+/**8.This Row For Inserting Perpose */
+GridEvent.prototype.deleteLastRow =function(){
+	
+	let gridHeightEle = (this.sagGridObj.gridEle).querySelectorAll('.gridTHeight');
+	let oldHeight = $(gridHeightEle).css("height");
+	let newHeight = Number((oldHeight.split("px"))[0]) - this.sagGridObj.OneRowHeight;
+	$(gridHeightEle).css("height",newHeight);
+		
+	let last_index = this.sagGridObj.originalRowData.length;
+
+	this.sagGridObj.originalRowData.pop();
+	
+	this.sagGridObj.resetGridData();
+
+	//let scrollObj = this.sagGridObj;  //new Scroll(this.sagGridObj);
+	this.sagGridObj.scrollObj.resetScroll();
+	this.sagGridObj.scrollObj.scrollToIndex(last_index);
+	this.sagGridObj.scrollObj.deleteRowByIndex(last_index);
+
+	 
+	 
+}
+
+
+/**9.This method for setRow Property rowJson like that format {"color":"red"} it will set tr attribute */
+GridEvent.prototype.setRowProperty = function(var_rowIndex,var_rowJson){
+	this.sagGridObj.generalEvntObj.setRowStyleProperty(var_rowIndex,var_rowJson);
+	this.sagGridObj.setRowPropertyObj[var_rowIndex] = var_rowJson;
+}
+
+
+/**3.This Method For Getting Particular Row Data Need To pass index of a row and index is start with 0 **/
+GridEvent.prototype.getRowData = function(var_rowIndex){
+	
+	let rowJson =  this.sagGridObj.originalRowData[var_rowIndex];
+	return rowJson;
+	
+}
+
+
+/**5.This Method for delete particular row take argument is rowIndex */
+GridEvent.prototype.deleteRow =function(var_rowIndex){
+	
+	
+	if(var_rowIndex > -1){
+		
+		this.sagGridObj.originalRowData.splice(var_rowIndex, 1);
+		
+		this.sagGridObj.resetGridData();
+		this.sagGridObj.createGridBody();
+	}else{
+		console.error("Error to Delete row"+var_rowIndex);
+	}
+		
+    /**let gridHeightEle = (this.sagGridObj.gridEle).querySelectorAll('.gridTHeight');
+	let oldHeight = $(gridHeightEle).css("height");
+	let newHeight = Number((oldHeight.split("px"))[0]) - this.sagGridObj.OneRowHeight;
+	$(gridHeightEle).css("height",newHeight);
+		
+	let last_index = this.sagGridObj.originalRowData.length;
+
+	this.sagGridObj.originalRowData.splice(var_rowIndex, 1);
+	
+	this.sagGridObj.resetGridData();
+
+	 let scrollObj = this.sagGridObj;  //new Scroll(this.sagGridObj);
+	 this.sagGridObj.scrollObj.resetScroll();
+	// this.sagGridObj.scrollObj.scrollToIndex(last_index);
+	 this.sagGridObj.scrollObj.deleteRowByIndex(var_rowIndex);
+	 **/
+	 
+
+	
+}
+
+/**6.This method for Update Row argument rowIndex and update Json with field name key */
+GridEvent.prototype.updateRow = function(var_rowIndex, var_updateJson){
+	
+	this.sagGridObj.originalRowData[var_rowIndex] = var_updateJson;
+	this.sagGridObj.scrollObj.deleteRowByIndex(var_rowIndex);
+	this.sagGridObj.scrollObj.addRowByIndex(var_rowIndex);
+	
+
+
+}
+
+
+
+/**38
+* */
+GridEvent.prototype.updateTotalTD = function() {
+	
+}
+
+
+
 
 
 
@@ -151,10 +279,7 @@ GridEvent.prototype.goAnyWherePage = function (pageNumber){
 
 //
 //
-///**3.This Method For Getting Particular Row Data Need To pass index of a row and index is start with 0 **/
-//GridEvent.prototype.getRowData = function(var_rowIndex){
-//	
-//}
+
 //
 ///**4.This method for Highlight Perpouse pass Argument rowIndex and color/color code **/
 //GridEvent.prototype.highlightRow = function(var_rowIndex,var_color){
@@ -162,31 +287,15 @@ GridEvent.prototype.goAnyWherePage = function (pageNumber){
 //	
 //}
 //
-///**5.This Method for delete particular row take argument is rowIndex */
-//GridEvent.prototype.deleteRow =function(var_rowIndex){
-//	
-//}
-//
-///**6.This method for Update Row argument rowIndex and update Json with field name key */
-//GridEvent.prototype.updateRow = function(var_rowIndex, var_updateJson){
-//	
-//}
+
 //
 ///**7.This Method For highlight Column */
 //GridEvent.prototype.setColumnProperty = function(var_columnJsonArr){
 //	
 //}
 //
-///**8.This Row For Inserting Perpose */
-//GridEvent.prototype.addRow =function(var_index , var_rowJsonData){
-//	
-//}
-//
-///**9.This method for setRow Property rowJson like that format {"style":"color:red;"} it will set tr attribute */
-//GridEvent.prototype.setRowProperty = function(var_rowIndex,var_rowJson){
-//	
-//	
-//}
+
+
 //
 ///**10. search Data and highlight this function is not Complete */
 //GridEvent.prototype.search = function(var_coldef, var_searchContain, var_propertyJson){
@@ -376,12 +485,7 @@ GridEvent.prototype.goAnyWherePage = function (pageNumber){
 //	
 //}
 //
-///**38
-// * */
-//GridEvent.prototype.updateTotalTD = function() {
-//	
-//}
-//
+
 ///**39
 // * this function  is used to highlight selected row**
 // * ***********/
@@ -575,3 +679,4 @@ GridEvent.prototype.goAnyWherePage = function (pageNumber){
 //GridEvent.prototype.enableKeyBoard = function(flag){}
 //	
 //
+

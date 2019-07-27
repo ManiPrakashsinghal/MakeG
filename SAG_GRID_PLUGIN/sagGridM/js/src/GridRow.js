@@ -18,8 +18,12 @@
 	      
 	      if(allColHtml["center"].children.length != 0){
 	 
-	     let grid_row = '<div id="row_'+rowIndex+'" sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut"  style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);">  </div>';
+	     let grid_row = '<div id="row_'+rowIndex+'" sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut "  style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);">  </div>';
 	     grid_row = GeneralEvent.createElementFromHTML(grid_row);
+	     
+	     if(this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(sag_G_Index)){
+	    	 grid_row.classList.add("sagGroupRow");
+ 		 }
 	   
 	     grid_row.appendChild(allColHtml["center"]);
 	    
@@ -32,9 +36,11 @@
 	      if(allColHtml["left"].children.length != 0){
 	    	  
 	    	  
-	    	  let grid_row = '<div id="row_'+rowIndex+'"sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut" style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);">  </div>';
+	    	  let grid_row = '<div id="row_'+rowIndex+'"sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut " style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);">  </div>';
 	 	     grid_row = GeneralEvent.createElementFromHTML(grid_row);
-	 	     
+	 	     if(this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(sag_G_Index)){
+		    	 grid_row.classList.add("sagGroupRow");
+	 		 }
 	 	     grid_row.appendChild(allColHtml["left"]);
 	 	   
 	        this.rowHtml["left"] = grid_row;
@@ -48,8 +54,13 @@
 	      if(allColHtml["right"].children.length != 0){
 	    	  
 	    	  
-	    	  let grid_row = '<div id="row_'+rowIndex+'" sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut" style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);" >  </div>';
+	    	  let grid_row = '<div id="row_'+rowIndex+'" sag_G_Index="'+sag_G_Index+'" saggridRowId="'+rowIndex+'" class="grid_row_header sagRow mouseOverOut " style=" height: '+this.sagGridObj.OneRowHeight+'px; transform: translateY('+this.rowTransformY+'px);" >  </div>';
 		 	   grid_row = GeneralEvent.createElementFromHTML(grid_row);
+		 	   
+		 	  if(this.sagGridObj.rowObjSpanIndexWidth.hasOwnProperty(sag_G_Index)){
+			    	 grid_row.classList.add("sagGroupRow");
+		 		 }
+		 	   
 		 	    grid_row.appendChild(allColHtml["right"]); 
 		 	  
 	        this.rowHtml["right"] =grid_row;
